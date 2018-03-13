@@ -3,7 +3,7 @@ pragma solidity ^0.4.14;
 contract Payroll {
     uint constant payDuration = 10 seconds;
 
-    address owner;ß
+    address owner;
     uint salary;
     address employee;
     uint lastPayday;
@@ -73,7 +73,7 @@ contract Payroll {
     }
     
     //settlement one employee's salary
-    function settlementSalary () public {
+    function settlementSalary () payable public {
         require(msg.sender == owner && isValidAddr(employee));
         //need to pay
         uint payment = salary * getSalaryNum();

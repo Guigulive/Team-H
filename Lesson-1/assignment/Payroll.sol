@@ -4,15 +4,17 @@ contract Payroll {
     uint constant payDuration = 10 seconds;
 
     address owner;
+    address self;
     uint salary;
     address employee;
     uint lastPayday;
 
-    function Payroll() {
+    function Payroll() public{
         owner = msg.sender;
+        self = this;
     }
     
-    function updateEmployee(address e, uint s) {
+    function updateEmployee(address e, uint s) public{
         require(msg.sender == owner);
         
         if (employee != 0x0) {
@@ -25,19 +27,19 @@ contract Payroll {
         lastPayday = now;
     }
     
-    function addFund() payable returns (uint) {
-        return this.balance;
+    function addFund() payable public returns (uint) {
+        return self.balance;
     }
     
-    function calculateRunway() returns (uint) {
-        return this.balance / salary;
+    function calculateRunway() public view returns (uint) {
+        return self.balance / salary;
     }
     
-    function hasEnoughFund() returns (bool) {
+    function hasEnoughFund() public view returns (bool) {
         return calculateRunway() > 0;
     }
     
-    function getPaid() {
+    function getPaid() public{
         require(msg.sender == employee);
         
         uint nextPayday = lastPayday + payDuration;
@@ -51,7 +53,7 @@ contract Payroll {
     function replaceEmployee (address addr) public returns (bool) {
         require(msg.sender == owner);
         if (isValidAddr(addr)) {
-            //settlementSalary();
+            settlementSalary();
             employee = addr;
             lastPayday = now;
             return true;
@@ -62,8 +64,7 @@ contract Payroll {
     //adjust salary to new one
     function adjustSalary(uint s) public {
         require(msg.sender == owner);
-        //do the employer need to settlement salary first?
-        //settlementSalary();
+        settlementSalary();
         salary = s * 1 ether;
     }
     
@@ -73,14 +74,17 @@ contract Payroll {
     }
     
     //settlement one employee's salary
-    function settlementSalary () payable public {
-        require(msg.sender == owner && isValidAddr(employee));
-        //need to pay
-        uint payment = salary * getSalaryNum();
-        assert(this.balance > payment);
-        employee.transfer(payment);
-        employee = 0x00;
-        lastPayday = now;
+    function settlementSalary () public {
+        require(msg.sender == owner);
+        if(isValidAddr(employee)) {
+            //need to pay
+            uint payment = salary * getSalaryNum();
+            assert(self.balance > payment && payment > 0);
+            employee.transfer(payment);
+            employee = 0x00;
+            lastPayday = now;
+        }
+        
     }
     
     //get the salary num need to settlement
@@ -91,7 +95,7 @@ contract Payroll {
     
     //get the balance
     function getBalance() public view returns  (uint) {
-        return this.balance /1 ether;
+        return self.balance /1 ether;
     }
     
     //get the owner
@@ -102,17 +106,6 @@ contract Payroll {
     //get the employee
     function getEmployee() public view returns (address) {
         return employee;
-    }
-    
-    //get the paid, must called by employee
-    function getMyPaid() payable public{
-        require(msg.sender == employee);
-        
-        uint nextPayday = lastPayday + payDuration;
-        assert(nextPayday < now);
-
-        lastPayday = nextPayday;
-        employee.transfer(salary);
     }
     
 }

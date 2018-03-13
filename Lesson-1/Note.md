@@ -26,10 +26,18 @@
 5. **gas关键字**
     gas、gas limit和gas price。回顾：[以太坊交易相关笔记](https://blog.tedxiong.com/Ethereum_Note.html)
     
+6. **Solidity--类型系统**
+    * 没有浮点数类型
+    * 定点数类型-计算机处理的数值数据多数带有小数，小数点在计算机中通常有两种表示方法，一种是约定所有数值数据的小数点隐含在某一个固定位置上，称为定点表示法，简称定点数；另一种是小数点位置可以浮动，称为浮点表示法，简称浮点数。
+    * UINT和INT 无符号整形和整形
+
+7. **Address**
+8. 
+    
 
 ### 问题整理
 1. 无论创建智能合约还是调用智能合约的方法，transaction detail都包含两项gas cost，transaction cost 和 execution cost，字面意思是交易消耗和执行消耗，这两项分别代表什么呢？  
-    答：
+    [关于transaction cost和execution cost的区别是什么？](https://github.com/Guigulive/Wiki/blob/master/FAQ/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6%E5%BC%80%E5%8F%91FAQ-1.md#%E5%85%B3%E4%BA%8Etransaction-cost%E5%92%8Cexecution-cost%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88)
 
 2.
     

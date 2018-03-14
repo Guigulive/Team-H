@@ -19,7 +19,7 @@ contract Payment {
     
     // 3 设置员工薪酬
     function setAmount(uint employeeAmount){
-        salaryAmount = 1000000000000000000 * employeeAmount;
+        salaryAmount = employeeAmount * 1 ether;
     }
     
     // 4 计算还剩发放次数

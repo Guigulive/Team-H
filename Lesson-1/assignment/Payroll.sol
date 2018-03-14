@@ -50,15 +50,13 @@ contract Payroll {
     }
     
     //replace now employee to new one
-    function replaceEmployee (address addr) public returns (bool) {
+    function replaceEmployee (address addr) public {
         require(msg.sender == owner);
         if (isValidAddr(addr)) {
             settlementSalary();
             employee = addr;
             lastPayday = now;
-            return true;
         }
-        return false;
     }
     
     //adjust salary to new one
@@ -74,7 +72,7 @@ contract Payroll {
     }
     
     //settlement one employee's salary
-    function settlementSalary () public {
+    function settlementSalary () private {
         require(msg.sender == owner);
         if(isValidAddr(employee)) {
             //need to pay
@@ -88,7 +86,7 @@ contract Payroll {
     }
     
     //get the salary num need to settlement
-    function getSalaryNum () public view returns (uint) {
+    function getSalaryNum () private view returns (uint) {
         uint num = (now - lastPayday) / payDuration;
         return num;
     }

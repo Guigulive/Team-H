@@ -80,7 +80,7 @@ contract PayRolll {
 	    	revert();
 	    }
 
-	    salary = newSalary;
+	    salary = newSalary * 1 ether;
 	}
 	
 	function getSalary() returns(uint) {

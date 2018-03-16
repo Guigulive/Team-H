@@ -67,7 +67,7 @@ contract Payroll {
     }
     
     //check the validitvalidity of address
-    function isValidAddr(address addr) private pure returns (bool) {
+    function isValidAddr(address addr) public pure returns (bool) {
         return 0x0 != addr;
     }
     

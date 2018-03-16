@@ -29,6 +29,6 @@
     
 * **calculateRunway函数优化**
     [Payroll_Optimize.sol](https://github.com/xiongwei-git/Team-H/blob/74-%E7%86%8A%E4%BC%9F/Lesson-2/assignment/Payroll_Optimize.sol)
-    定义一个storage变量totalSalary，再新增、修改或者删除员工时，将对应的员工salary统计到totalSalary中。取代calculateRunway函数中的for循环，这样可以将预算的复杂度从O(n²)降低至O(n)。
+    定义一个storage变量totalSalary，在新增、修改或者删除员工时，将对应的员工salary统计到totalSalary中。取代calculateRunway函数中的for循环，这样可以将预算的复杂度从O(n²)降低至O(n)。
 
 

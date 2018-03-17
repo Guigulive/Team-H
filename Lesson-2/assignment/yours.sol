@@ -22,10 +22,10 @@ contract Payroll {
     }
     
     function _partialPaid(Employee employee) private {
-        if (employee.id != 0x0) {
-            uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
-            employee.id.transfer(payment);
-        }
+  
+        uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+        employee.id.transfer(payment);
+        
     }
     
     function _findEmployee(address employeeId) private returns (Employee, uint) {

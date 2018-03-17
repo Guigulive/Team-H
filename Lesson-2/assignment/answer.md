@@ -17,7 +17,7 @@
 | 09 | 29236 | 7964 | 37200 |
 | 10 | 30017 | 8745 | 38762 |
 
-没增加一个新员工，calculateRunway()消耗的gas就会增加1562。这是因为每次calculateRunway都要遍历当前的employees数组，随着数组长度增加，函数需要更多的gas来访问新的数组成员。
+每增加一个新员工，calculateRunway()消耗的gas就会增加1562。这是因为每次calculateRunway都要遍历当前的employees数组，随着数组长度增加，函数需要更多的gas来访问新的数组成员。
 
 ## Gas costs of the optimized calculateRunway() function
 

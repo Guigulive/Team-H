@@ -101,3 +101,8 @@ contract Payrool{
         employee.id.transfer(employee.salary);
     }
 }
+
+// 1、每次添加1名员工，调用calculateRunway消耗的gas依次为：
+// 1694 gas 2475 gas 3256 gas 4037 gas 4818 gas 5599 gas 6380 gas 7161 gas 7942 gas 8723 gas
+// 2、gas一直变大，因为每次动态计算totalSalary导致
+// 3、解决方案：设计到totalSalary变化的方法计算，calculateRunway只需要计算简单的除数就可以

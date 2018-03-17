@@ -26,8 +26,8 @@
 *  execution cost 	1110 gas
 * 
 *  emplyee: 10
-*  transaction cost 	46326 gas 
-*  execution cost 	25054 gas 
+*  transaction cost 	22382 gas 
+*  execution cost 	1110 gas 
 */
 
 pragma solidity ^0.4.14;
@@ -51,6 +51,8 @@ contract Payroll {
     }
     
     function _partialPaid(Employee employee) private {
+        uint payment = employee.salary * (now-employee.lastPayday) / payDuration;
+        employee.id.transfer(payment);
     }
     
     function _findEmployee(address employeeId) private returns (Employee, uint) {
@@ -73,7 +75,7 @@ contract Payroll {
         require(msg.sender==owner);
         var (employee, idx) = _findEmployee(employeeId);
         assert(employee.id != 0x0);
-        
+        _partialPaid(employee);
         delete employees[idx];
         employees[idx] = employees[employees.length - 1];
         employees.length--;

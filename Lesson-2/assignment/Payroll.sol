@@ -42,7 +42,7 @@ contract Payroll {
         employees.push(Employee(employeeId, salary * 1 ether, now));
     }
     
-    function removeEmployee(address employeeId) public {
+    function removeEmployee(address employeeId)  {
         require(msg.sender == owner);
         var (employee, index) = _findEmployee(employeeId);
         assert(employee.id != 0x0);
@@ -52,7 +52,7 @@ contract Payroll {
         employees.length -= 1;
     }
     
-    function updateEmployee(address employeeId, uint salary) public {
+    function updateEmployee(address employeeId, uint salary) {
         require(msg.sender == owner);
         var (employee, index) = _findEmployee(employeeId); 
         assert(employee.id != 0x0);
@@ -65,7 +65,7 @@ contract Payroll {
         return self.balance;
     }
     
-    function calculateRunway() public view returns (uint) {
+    function calculateRunway()   returns (uint) {
         uint totalSalary = 0;
        for (uint i = 0; i < employees.length; i++) {
             totalSalary += employees[i].salary;
@@ -74,11 +74,11 @@ contract Payroll {
         return self.balance / totalSalary;
     }
     
-    function hasEnoughFund() public view returns (bool) {
+    function hasEnoughFund()   returns (bool) {
         return calculateRunway() > 0;
     }
     
-    function getPaid() public {
+    function getPaid()  {
         var (employee, index) = _findEmployee(msg.sender);
         assert(employee.id != 0x0);
          

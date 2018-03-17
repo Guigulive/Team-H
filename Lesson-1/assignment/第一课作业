@@ -1,0 +1,83 @@
+pragma solidity ^0.4.14;
+
+
+contract firstTask{
+    address owner;
+    
+    address Employee;
+
+    uint  payDuration = 10 seconds;
+   
+    uint wages =1 ether;
+
+    
+    uint lastPayDay;
+ 
+    function firstTask(){
+        owner=msg.sender;
+    }
+    
+    function changeUserAddress(address user){   //改变用户地址  只有合约部署者才有权限改变员工地址
+    
+        require(msg.sender==owner);
+        
+    
+          if(Employee!=0x0){
+               uint payMent=wages * ( now - lastPayDay ) / payDuration;  //更改员工地址前，把未领取的工资发放给他。
+            Employee.transfer(payMent);
+          }
+           
+       
+        Employee=user;
+        lastPayDay=now;
+       
+    }
+  
+    
+    function changeWages(uint money){                //改变薪资 只有合约部署者才有权限改变员工工资。money 默认参数是wei，需要转化。
+             
+      require(msg.sender==owner);
+       
+      wages = money * 1 ether;
+      
+    }
+    
+    function addFund() payable returns(uint){         
+         
+          return  this.balance;
+          
+    }
+    
+    function payFrequency() returns (uint){
+        
+        uint Frequency=this.balance/payDuration;  //避免消耗过多GAS 
+        
+        if(Frequency>0){
+            
+            return Frequency;
+        }
+        else{
+            revert();
+        }
+    
+    }
+    
+    function getWages(){
+        
+        if(msg.sender!=owner){
+            uint netPayDay= lastPayDay+payDuration;
+            
+            if(netPayDay>now ){
+                revert();
+            }
+            else{
+                Employee.transfer(wages);
+            }
+        }
+        
+    } 
+
+    
+    
+    
+}

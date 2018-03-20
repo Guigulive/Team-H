@@ -6,13 +6,13 @@
 ```
 addFund();
 ```
-![addFund](./screenshots/01 addFund.png)
+![addFund](/screenshots/01.png)
 
 2. Add employee2:
 ```
 addEmployee("0x14723a09acff6d2a60dcdf7aa4aff308fddc160c", 1);
 ```
-![addEmployee](/screenshots/02 addEmployee.png)
+![addEmployee](./screenshots/01.png)
 
 3. Add employee3:
 ```

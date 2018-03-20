@@ -16,7 +16,7 @@ contract Payroll is Ownable, PullPayment {
         uint lastPaymentSettlementDate; // the last payment settlement date
     }
     mapping(address => Employee) employees;
-    uint private _totalSalary;
+    uint public _totalSalary;
 
     /**
      * @dev Throws if an employee doesn't exist.
@@ -39,10 +39,10 @@ contract Payroll is Ownable, PullPayment {
     /**
      * @dev Throws if new salary is the same as the original one.
      * @param employeeId The id of the employee.
-     * @param salary The new salary.
+     * @param newSalary The new salary.
      */
     modifier change_salary(address employeeId, uint newSalary) {
-        require(newSalary.sub(employees[employeeId].salary) != 0);
+        require(newSalary != employees[employeeId].salary);
         _;
     }
 
@@ -118,7 +118,7 @@ contract Payroll is Ownable, PullPayment {
     /**
      * @dev Allows owner to change the salary of an employee.
      * @param employeeId The id of the employee.
-     * @param salary The new salary of the employee.
+     * @param newSalary The new salary of the employee.
      */
     function updateEmployeeSalary(address employeeId, uint newSalary)
         public
@@ -127,15 +127,13 @@ contract Payroll is Ownable, PullPayment {
         change_salary(employeeId, newSalary)
     {
         _settlePayment(employeeId); // Settle old-rate salary payment
-        uint salaryDifference = newSalary.sub(employees[employeeId].salary);
+        _totalSalary = _totalSalary.add(newSalary).sub(employees[employeeId].salary);
         employees[employeeId].salary = newSalary;
-        _totalSalary = _totalSalary.add(salaryDifference);
     }
 
     /**
      * @dev Allows an employee to transferring his payment address.
-     * @param employeeId The id of the employee.
-     * @param salary The new salary of the employee.
+     * @param newEmployeeId The id of the employee.
      */
     function changePaymentAddress(address newEmployeeId)
         public

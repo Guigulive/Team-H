@@ -62,3 +62,10 @@ changePaymentAddress("0x583031d1113ad414f02576bd6afabfb302140225");
 getPaid();
 ```
 ![getPaid](./screenshots/10_getPaid.png)
+
+## Owner Operation Continued
+11. Owner transfers contract ownership to employee3:
+```
+transferOwnership("0x583031d1113ad414f02576bd6afabfb302140225");
+```
+![transferOwnership](./screenshots/11_transferOwnership.png)

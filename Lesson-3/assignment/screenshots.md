@@ -1,12 +1,12 @@
-## Screenshots of function execution
-0. Create contract Pyaroll.
+# Screenshots of Function Execution
 
 ## Owner Operations
+0. Create contract Pyaroll.
 1. Add 10000 ether to the contract:
 ```
 addFund();
 ```
-![addFund](/screenshots/01 addFund.png)
+![addFund](./screenshots/01 addFund.png)
 
 2. Add employee2:
 ```

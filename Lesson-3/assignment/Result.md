@@ -20,22 +20,22 @@ L(A) := [A] + merge(L(O), [O])
 L(B) := [B, O]//计算过程类似L(A)
 L(C) := [C, O]//计算过程类似L(A)
 
-L(K1) := [K1] + merge(L(A), L(B), [A, B])
-       = [K1] + merge([A, O], [B, O], [A, B])
-       //从所有输入集合里选出出现在头部次数最多的并且不在尾部的元素，符合条件是A
-       = [K1, A] + merge([O], [B, O], [B])
-       = [K1, A, B] + merge([O], [O])
-       = [K1, A, B, O]
+L(K1) := [K1] + merge(L(B), L(A), [B, A])
+       = [K1] + merge([B, O], [A, O], [B, A])
+       //从所有输入集合里选出出现在头部次数最多的并且不在尾部的元素，符合条件是B
+       = [K1, B] + merge([O], [A, O], [A])
+       = [K1, B, A] + merge([O], [O])
+       = [K1, B, A, O]
        
- L(K2) := [K2, A, C, O]//计算过程类似L(K1)
+ L(K2) := [K2, C, A, O]//计算过程类似L(K1)
  
- L(Z) := [Z] + merge(L(K1), L(K2), [K1, K2])
-       = [Z] + merge([K1, A, B, O], [K2, A, C, O], [K1, K2])
-       = [Z, K1] + merge([A, B, O], [K2, A, C, O], [K2])
-       = [Z, K1, K2] + merge([A, B, O], [A, C, O])
-       = [Z, K1, K2, A] + merge([B, O], [C, O])
-       = [Z, K1, K2, A, B] + merge([O], [C, O])
-       = [Z, K1, K2, A, B, C] + merge([O], [O])
-       = [Z, K1, K2, A, B, C, O]
+ L(Z) := [Z] + merge(L(K2), L(K1), [K2, K1])
+       = [Z] + merge([K2, C, A, O], [K1, B, A, O], [K2, K1])
+       = [Z, K2] + merge([C, A, O], [K1, B, A, O], [K1])
+       = [Z, K2, K1] + merge([C, A, O], [B, A, O])
+       = [Z, K2, K1, C] + merge([A, O], [B, A, O])
+       = [Z, K2, K1, C, A] + merge([O], [B, O])
+       = [Z, K2, K1, C, A, B] + merge([O], [O])
+       = [Z, K2, K1, C, A, B, O]
 ```
 

@@ -1,5 +1,9 @@
 pragma solidity ^0.4.14;
-contract Payroll {
+import './SafeMath.sol';
+import './Ownable.sol';
+
+contract Payroll is Ownable{
+    using SafeMath for uint;
     
     struct Employee {
         address id;
@@ -9,13 +13,11 @@ contract Payroll {
     
     uint constant payDuration = 10 seconds;
 
-    address owner;
     address self;
     uint totalSalary;
     mapping(address => Employee) public employees;
 
     function Payroll() public {
-        owner = msg.sender;
         self = this;
     }
     
@@ -25,28 +27,30 @@ contract Payroll {
     
     //settlement one employee's salary
     function _partialPaid(Employee employee) private {
-        uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+        uint payment = employee.salary.mul(now.sub(employee.lastPayday)).div(payDuration);
         assert(self.balance > payment && payment > 0);
         employee.id.transfer(payment);
     }
 
     function addEmployee(address employeeId, uint salary) onlyOwner public{
         assert(employees[employeeId].id == 0x0);
-        totalSalary += salary * 1 ether;
-        employees[employeeId] = Employee(employeeId, salary * 1 ether, now);
+        uint salaryWei = salary.mul(1 ether);
+        totalSalary = totalSalary.add(salaryWei);
+        employees[employeeId] = Employee(employeeId, salaryWei, now);
     }
     
     function removeEmployee(address employeeId) onlyOwner employeeExit(employeeId) public {
         _partialPaid(employees[employeeId]);
-        totalSalary -= employees[employeeId].salary;
+        totalSalary = totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
     }
     
     function updateEmployee(address employeeId, uint salary) onlyOwner employeeExit(employeeId) public {
         _partialPaid(employees[employeeId]);
-        totalSalary -= employees[employeeId].salary;
-        totalSalary += salary * 1 ether;
-        employees[employeeId].salary = salary * 1 ether;
+        totalSalary = totalSalary.sub(employees[employeeId].salary);
+        uint salaryWei = salary.mul(1 ether);
+        totalSalary = totalSalary.add(salaryWei);
+        employees[employeeId].salary = salaryWei;
         employees[employeeId].lastPayday = now;
     }
     
@@ -61,7 +65,7 @@ contract Payroll {
     
     function calculateRunway() public view returns (uint) {
         assert(totalSalary > 0);
-        return self.balance / totalSalary;
+        return self.balance.div(totalSalary);
     }
     
     function hasEnoughFund() public view returns (bool) {
@@ -69,16 +73,11 @@ contract Payroll {
     }
     
     function getPaid() employeeExit(msg.sender) public {
-        uint nextPayday = employees[msg.sender].lastPayday + payDuration;
+        uint nextPayday = employees[msg.sender].lastPayday.add(payDuration);
         assert(nextPayday < now);
         
         employees[msg.sender].lastPayday = nextPayday;
         employees[msg.sender].id.transfer(employees[msg.sender].salary);
-    }
-    
-    modifier onlyOwner(){
-        require(msg.sender == owner);
-        _;
     }
     
     modifier employeeExit(address employeeId) {

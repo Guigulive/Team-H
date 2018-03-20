@@ -4,6 +4,13 @@ import "./SafeMath.sol";
 import "./Ownable.sol";
 import "./PullPayment.sol";
 
+/**
+ * @title Payroll
+ * @dev Base contract supporting: adding fund, adding employees, removing
+ * employees, updating employee salary, calculating runway, checking if balance
+ * is enough, transferring contract ownership, allowing employee to get paid,
+ * allowing leave-office employee to get severance pay.
+ */
 contract Payroll is Ownable, PullPayment {
 
     using SafeMath for uint;

@@ -1,4 +1,4 @@
-/*作业请提交在这个目录下*/
+﻿/*作业请提交在这个目录下*/
 pragma solidity ^0.4.14;
 contract Payroll {
     uint salary= 1 ether;

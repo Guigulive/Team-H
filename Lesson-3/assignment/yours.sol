@@ -44,41 +44,6 @@ contract Payroll is Ownable, PullPayment {
     }
 
     /**
-     * @dev Throws if new salary is the same as the original one.
-     * @param employeeId The id of the employee.
-     * @param newSalary The new salary.
-     */
-    modifier change_salary(address employeeId, uint newSalary) {
-        require(newSalary != employees[employeeId].salary);
-        _;
-    }
-
-    /**
-     * @dev Throws if payment address is the same as the original one. Tranfer
-     * all payment of the original address to the new address.
-     * @param newEmployeeId The new payment address of the employee.
-     */
-    modifier change_payment_address(address newEmployeeId) {
-        require(msg.sender != newEmployeeId);
-        _;
-        employees[msg.sender].id = newEmployeeId;
-        employees[newEmployeeId] = employees[msg.sender];
-        delete employees[msg.sender];
-        uint payment = payments[msg.sender];
-        delete payments[msg.sender];
-        asyncSend(newEmployeeId, payment);
-    }
-
-    /**
-     * @dev Throws if an employee is not in the payment list.
-     * @param employeeId The id of the employee.
-     */
-    modifier in_payment_list(address employeeId) {
-        require(payments[employeeId] > 0);
-        _;
-    }
-
-    /**
      * @dev Allows caller to settle the current payment of an employee.
      * @param employeeId The id of the employee.
      */
@@ -131,8 +96,8 @@ contract Payroll is Ownable, PullPayment {
         public
         onlyOwner
         employee_exist(employeeId)
-        change_salary(employeeId, newSalary)
     {
+        require(newSalary != employees[employeeId].salary);
         _settlePayment(employeeId); // Settle old-rate salary payment
         _totalSalary = _totalSalary.add(newSalary).sub(employees[employeeId].salary);
         employees[employeeId].salary = newSalary;
@@ -145,9 +110,14 @@ contract Payroll is Ownable, PullPayment {
     function changePaymentAddress(address newEmployeeId)
         public
         employee_exist(msg.sender)
-        change_payment_address(newEmployeeId)
     {
-        // function realization is moved into the modifier.
+      require(msg.sender != newEmployeeId);
+      employees[msg.sender].id = newEmployeeId;
+      employees[newEmployeeId] = employees[msg.sender];
+      delete employees[msg.sender];
+      uint payment = payments[msg.sender];
+      delete payments[msg.sender];
+      asyncSend(newEmployeeId, payment);
     }
 
     /**
@@ -185,8 +155,8 @@ contract Payroll is Ownable, PullPayment {
     function getSeverancePay()
         public
         employee_does_not_exist(msg.sender)
-        in_payment_list(msg.sender)
     {
+        require(payments[msg.sender] > 0);
         withdrawPayments();
     }
 }

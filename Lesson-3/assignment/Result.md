@@ -22,7 +22,7 @@ L(C) := [C, O]//计算过程类似L(A)
 
 L(K1) := [K1] + merge(L(B), L(A), [B, A])
        = [K1] + merge([B, O], [A, O], [B, A])
-       //从所有输入集合里选出出现在头部次数最多的并且不在尾部的元素，符合条件是B
+       //一个序列的第一个元素，是其他序列中的第一个元素，或不在其他序列出现，符合条件是B
        = [K1, B] + merge([O], [A, O], [A])
        = [K1, B, A] + merge([O], [O])
        = [K1, B, A, O]
@@ -32,10 +32,14 @@ L(K1) := [K1] + merge(L(B), L(A), [B, A])
  L(Z) := [Z] + merge(L(K2), L(K1), [K2, K1])
        = [Z] + merge([K2, C, A, O], [K1, B, A, O], [K2, K1])
        = [Z, K2] + merge([C, A, O], [K1, B, A, O], [K1])
-       = [Z, K2, K1] + merge([C, A, O], [B, A, O])
-       = [Z, K2, K1, C] + merge([A, O], [B, A, O])
-       = [Z, K2, K1, C, A] + merge([O], [B, O])
-       = [Z, K2, K1, C, A, B] + merge([O], [O])
-       = [Z, K2, K1, C, A, B, O]
+       = [Z, K2, C] + merge([A, O], [K1, B, A, O], [K1])
+       = [Z, K2, C, K1] + merge([A, O], [B, A, O])
+       = [Z, K2, C, K1, B] + merge([A, O], [A, O])
+       = [Z, K2, C, K1, B, A] + merge([O], [O])
+       = [Z, K2, C, K1, B, A, O]
+       
+//遍历执行merge操作的序列，如果一个序列的第一个元素，是其他序列中的第一个元素，或不在其他序列出
+//现，则从所有执行merge操作序列中删除这个元素，合并到当前的mro中。
+//merge操作后的序列，继续执行merge操作，直到merge操作的序列为空。
 ```
 

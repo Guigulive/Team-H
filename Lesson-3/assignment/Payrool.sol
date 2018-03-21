@@ -21,8 +21,10 @@ contract Payroll is Ownable{
         self = this;
     }
     
-    function changePaymentAddress (address fromEmployeeId, address toEmployeeId) employeeChange(fromEmployeeId, toEmployeeId) public {
-        employees[toEmployeeId] = Employee(toEmployeeId, employees[fromEmployeeId].salary, employees[fromEmployeeId].lastPayday);
+    function changePaymentAddress (address fromEmployeeId, address toEmployeeId) employeeExit(fromEmployeeId) employeeNoExit(toEmployeeId) public {
+        var employeePre = employees[fromEmployeeId];
+        employees[toEmployeeId] = Employee(toEmployeeId, employeePre.salary, employeePre.lastPayday);
+        delete employees[fromEmployeeId];
     }
     
     //settlement one employee's salary
@@ -32,8 +34,7 @@ contract Payroll is Ownable{
         employee.id.transfer(payment);
     }
 
-    function addEmployee(address employeeId, uint salary) onlyOwner public{
-        assert(employees[employeeId].id == 0x0);
+    function addEmployee(address employeeId, uint salary) onlyOwner employeeNoExit(employeeId) public{
         uint salaryWei = salary.mul(1 ether);
         totalSalary = totalSalary.add(salaryWei);
         employees[employeeId] = Employee(employeeId, salaryWei, now);
@@ -85,12 +86,14 @@ contract Payroll is Ownable{
         _;
     }
     
-    modifier employeeChange(address fromEmployeeId, address toEmployeeId) {
-        require(fromEmployeeId != toEmployeeId);
-        assert(employees[fromEmployeeId].id != 0x0);
-        assert(employees[toEmployeeId].id == 0x0);
+    modifier employeeNoExit(address employeeId) {
+        assert(employees[employeeId].id == 0x0);
         _;
-        delete employees[fromEmployeeId];
+    }
+    
+    modifier employeeDelete(address employeeId) {
+        _;
+        delete employees[employeeId];
     }
     
 }

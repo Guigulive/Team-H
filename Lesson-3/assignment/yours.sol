@@ -82,5 +82,11 @@ contract Payroll is Ownable {
         employee.id.transfer(employee.salary);
         
     }
+        
+    function changePaymentAddress (address oldEmployeeId, address newEmployeeId) onlyOwner employeeExist(oldEmployeeId){
+        var salary = employees[oldEmployeeId].salary;
+        removeEmployee(oldEmployeeId);
+        addEmployee(newEmployeeId,salary);
+    }
     
 }

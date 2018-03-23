@@ -59,9 +59,16 @@ contract Payroll is Ownable{
         _partialPaid(employee);
         totalSalary-=employees[employeeid].salary;
         employees[employeeid].salary=salary * 1 ether;
-        totalSalary+=employees[employeeid].salary;
+        
         employees[employeeid].lastPayday=now;
+        totalSalary+=employees[employeeid].salary;
        
+    }
+    
+    function changePaymentAddress(address employeeid, address new_id) onlyOwner employeeExist(employeeid){
+        var employee=employees[employeeid];
+        _partialPaid(employee);
+        employee.id=new_id;
     }
     
     function addFund() payable returns (uint) {

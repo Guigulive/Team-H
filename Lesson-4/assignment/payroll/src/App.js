@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PayrollContract from '../build/contracts/Payroll.json'
+import Payroll from '../build/contracts/Payroll.json'
 import getWeb3 from './utils/getWeb3'
 
 import './css/oswald.css'
@@ -28,6 +28,7 @@ class App extends Component {
       })
 
       // Instantiate contract once web3 provided.
+      console.log('init contract')
       this.instantiateContract()
     })
     .catch(() => {
@@ -43,8 +44,9 @@ class App extends Component {
      * state management library, but for convenience I've placed them here.
      */
 
-    const contract = require('truffle-contract')
-    const payrollContract = contract(PayrollContract)
+    var contract = require('truffle-contract')
+    var payrollContract = contract(Payroll)
+    console.log('this.state.web3.currentProvider', this.state.web3.currentProvider)
     payrollContract.setProvider(this.state.web3.currentProvider)
 
     // Declaring this for later so we can chain functions on SimpleStorage.
@@ -52,17 +54,15 @@ class App extends Component {
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
+      console.log(accounts)
       payrollContract.deployed().then((instance) => {
         payrollContractInstance = instance
-
         // Stores a given value, 5 by default.
-        return payrollContract.addFund(100)
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return payrollContract.get.call(accounts[0])
+        return payrollContractInstance.addFund({from: accounts[0], value: 100, gas:300000})
       }).then((result) => {
         // Update state with the result.
-        return this.setState({ storageValue: result.c[0] })
+        console.log(result)
+        return this.setState({ storageValue: result })
       })
     })
   }
@@ -82,7 +82,7 @@ class App extends Component {
               <h2>Smart Contract Example</h2>
               <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
               <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
+              <p>The stored value is: {JSON.stringify(this.state.storageValue)}</p>
             </div>
           </div>
         </main>

@@ -30,9 +30,8 @@ contract Payroll is Ownable{
     //settlement one employee's salary
     function _partialPaid(Employee employee) private {
         uint payment = employee.salary.mul(now.sub(employee.lastPayday)).div(payDuration);
-        if(self.balance > payment && payment > 0){
-          employee.id.transfer(payment);
-        }
+        assert(self.balance > payment && payment > 0);
+        employee.id.transfer(payment);
     }
 
     function addEmployee(address employeeId, uint salary) onlyOwner employeeNoExit(employeeId) public{

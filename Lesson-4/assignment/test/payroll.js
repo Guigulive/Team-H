@@ -70,6 +70,9 @@ contract('Payroll_removeEmployee', function(accounts) {
     }).then(function(employee) {
       assert.equal(employee[1].toNumber(), web3.toWei(1, 'ether'), "Error!!: add employee failed!");
     }).then(function() {
+      return payrollInstance.addFund({from: accounts[0],value: web3.toWei('10', 'ether')});
+    }).then(function() {
+      web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [11], id: 0});
       return payrollInstance.removeEmployee(accounts[1]);
     }).then(function() {
       return payrollInstance.employees(accounts[1]);
@@ -113,5 +116,5 @@ contract('Payroll_getPaid', function(accounts) {
         assert.include(error.toString(),"revert", "Error!!!: Not employee get paid success!!!!!");
     });
   });
-  
+
 });

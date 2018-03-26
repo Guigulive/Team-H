@@ -4,11 +4,16 @@ import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/SimpleStorage.sol";
 
-contract TestSimpleStorage is SimpleStorage{
+contract TestSimpleStorage {
 
-  function testItStoresAValue() {
-    setInternal(89);
-    Assert.equal(get(), 89, "It should store the value 89.");
+  function testItStoresAValue() public {
+    SimpleStorage simpleStorage = SimpleStorage(DeployedAddresses.SimpleStorage());
+
+    simpleStorage.set(89);
+
+    uint expected = 89;
+
+    Assert.equal(simpleStorage.get(), expected, "It should store the value 89.");
   }
 
 }

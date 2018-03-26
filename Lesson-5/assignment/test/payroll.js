@@ -108,11 +108,11 @@ contract('Payroll_getPaid', function(accounts) {
   it("Test not employee get paid", function(){
       Payroll.deployed().then(function(instance) {
         payrollInstance = instance;
-          return payroll.addFund({from: accounts[0],value: web3.toWei('10', 'ether')});
+          return payrollInstance.addFund({from: accounts[0],value: web3.toWei('10', 'ether')});
       }).then(function() {
           web3.currentProvider.send({jsonrpc: "2.0", method: "evm_increaseTime", params: [11], id: 0});
-          return payroll.getPaid({from: accounts[2]})
-      }).catch(function() {
+          return payrollInstance.getPaid({from: accounts[2]})
+      }).catch(function(error) {
         assert.include(error.toString(),"revert", "Error!!!: Not employee get paid success!!!!!");
     });
   });

@@ -26,7 +26,7 @@ class Employee extends Component{
     }
 
     getPaid=()=>{
-        const {payroll, employee, web3} =this.props;
+        const {payroll, employee} =this.props;
         payroll.getPaid({
             from:employee,
             gas:1000000
@@ -42,7 +42,7 @@ class Employee extends Component{
 
     render(){
         const {salary, lastPaidDate } = this.state;
-        const {payroll, employee, web3} = this.props;
+        const {employee} = this.props;
         return (
             <div>
                 <h2>员工: {employee}</h2>

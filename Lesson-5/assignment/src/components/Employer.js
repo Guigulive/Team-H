@@ -35,7 +35,7 @@ class Employer extends Component{
     updateEmployee=()=>{
 
         const {payroll, employer}=this.props;
-        payroll.updateEmployee(this.employeeInput.value, parseInt(this.salaryInput.value),{
+        payroll.updateEmployee(this.employeeInput.value, parseInt(this.salaryInput.value,10),{
             from:employer,
             gas:1000000
         }).then(result=>{

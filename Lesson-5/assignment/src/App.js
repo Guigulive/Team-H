@@ -17,7 +17,6 @@ class App extends Component {
     super(props)
 
     this.state = {
-      balance: 0,
       web3: null
     }
   }
@@ -47,7 +46,7 @@ class App extends Component {
     payroll.setProvider(this.state.web3.currentProvider)
 
     // Declaring this for later so we can chain functions on Payroll.
-    var payrollInstance
+    //var payrollInstance
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
@@ -60,7 +59,7 @@ class App extends Component {
       });
 
       payroll.deployed().then((instance) => {
-        payrollInstance = instance
+        //payrollInstance = instance
 
         this.setState({
           payroll:instance
@@ -88,7 +87,7 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Payroll</a>
+            <a href="#" className="pure-menu-heading pure-menu-link">Ted智能合约学习Demo</a>
         </nav>
 
         <main className="container">
@@ -102,7 +101,9 @@ class App extends Component {
                 <Employer employer={selectedAccount} payroll={payroll} web3={web3} /> :
                 <Employee employee={selectedAccount} payroll={payroll} web3={web3} />
               }
-              {payroll && <Common account={selectedAccount} payroll={payroll} web3={web3} />}
+              {
+                payroll && <Common account={selectedAccount} payroll={payroll} web3={web3} />
+              }
             </div>
           </div>
         </main>

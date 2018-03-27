@@ -1,5 +1,5 @@
 Payroll.deployed().then(instance => payroll = instance)
-web3.fromWei(web3.eth.getBalance('0x214ba0c71398316a107a41ddcf9679c6c312fee6').toNumber(),'ether')
+web3.fromWei(web3.eth.getBalance('0x82d50ad3c1091866e258fd0f1a7cc9674609d254').toNumber(),'ether')
 web3.fromWei(web3.eth.getBalance(web3.eth.accounts[0]).toNumber())
 payroll.addFund({from: web3.eth.accounts[0], value: 60000000000000000000})
 payroll.addEmployee(web3.eth.accounts[1], 2, {from: web3.eth.accounts[0]})

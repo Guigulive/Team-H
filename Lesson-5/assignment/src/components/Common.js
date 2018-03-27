@@ -7,7 +7,6 @@ class Common extends Component{
         this.state={};
     }
 
-
     componentDidMount(){
         const {payroll, web3, account}=this.props;
         payroll.getInfo.call({from: account}).then(result=>{
@@ -23,8 +22,8 @@ class Common extends Component{
         const {runway, balance, employeeCount}=this.state;
         return (
             <div>
-                <h2>员工信息</h2>
-                <p>薪水:{balance}</p>
+                <h2>薪酬信息概览</h2>
+                <p>薪水余额:{balance} ETH</p>
                 <p>总员工数:{employeeCount}</p>
                 <p>可支付次数:{runway}</p>
             </div>

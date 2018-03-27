@@ -13,9 +13,10 @@ class Employer extends Component{
 
         payroll.addFund({
             from:employer,
+            //default input unit is ether
             value:web3.toWei(this.fundInput.value)
         });
-
+        console.log('addFund success!');
 
     }
 

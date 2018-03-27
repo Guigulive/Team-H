@@ -25,8 +25,7 @@ class App extends Component {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
 
-    getWeb3
-    .then(results => {
+    getWeb3.then(results => {
       this.setState({
         web3: results.web3
       })
@@ -51,33 +50,32 @@ class App extends Component {
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
 
-      console.log(accounts);
-
+      //console.log(accounts);
       this.setState({
         accounts,
         selectedAccount:accounts && accounts[0]
       });
 
       payroll.deployed().then((instance) => {
-        //payrollInstance = instance
-
         this.setState({
           payroll:instance
         });
-
       });
 
     })
   }
 
   onSelectAccount=(employee)=>{
-  this.setState({
-    selectedAccount:employee.target.text
-  });
+
+    this.setState({
+      selectedAccount:employee.target.text
+    });
+
 }
 
   render() {
-
+    //console.log('call render');
+    //console.log(this.state);
     const {selectedAccount,accounts,payroll,web3}=this.state;
 
     if(!accounts){

@@ -69,7 +69,8 @@ contract Payroll is Ownable{
     }
 
     function calculateRunway() public view returns (uint) {
-        assert(totalSalary > 0);
+        //assert(totalSalary > 0);
+        if(totalSalary == 0)return 0;
         return self.balance.div(totalSalary);
     }
 

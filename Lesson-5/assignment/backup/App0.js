@@ -2,28 +2,22 @@ import React, { Component } from 'react'
 import PayrollContract from '../build/contracts/Payroll.json'
 import getWeb3 from './utils/getWeb3'
 
-import { Layout, Menu, Spin, Alert } from 'antd';
-
-//import Common from "./components/Common";
-//import Accounts from "./components/Accounts";
+import Common from "./components/Common";
+import Accounts from "./components/Accounts";
 import Employer from "./components/Employer";
 import Employee from "./components/Employee";
 
-// import './css/oswald.css'
-// import './css/open-sans.css'
-// import './css/pure-min.css'
-import 'antd/dist/antd.css';
+import './css/oswald.css'
+import './css/open-sans.css'
+import './css/pure-min.css'
 import './App.css'
-
-const { Header, Content, Footer } = Layout;
 
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      web3: null,
-      mode: 'employer'
+      web3: null
     }
   }
 
@@ -82,36 +76,36 @@ class App extends Component {
   render() {
     //console.log('call render');
     //console.log(this.state);
-    // const {selectedAccount,accounts,payroll,web3}=this.state;
-    //
-    // if(!accounts){
-    //   return <div>Loading</div>;
-    // }
+    const {selectedAccount,accounts,payroll,web3}=this.state;
+
+    if(!accounts){
+      return <div>Loading</div>;
+    }
 
     return (
-      <Layout>
-        <Header className='header'>
-          <div className='logo'>Ted区块链开发作业-薪酬系统</div>
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['employer']}
-            style={{lineHeight:'64px'}}
-            onSelect={this.onSelectTab}
-            >
-            <Menu.Item key="employer">雇主</Menu.Item>
-            <Menu.Item key="employee">雇员</Menu.Item>
-          </Menu>
-        </Header>
-        <Content style={{padding:'0 50px'}}>
-          <Layout style={{ padding:'24px 0', background:'#fff', minHeight: '600px'}}>
+      <div className="App">
+        <nav className="navbar pure-menu pure-menu-horizontal">
+            <a href="#" className="pure-menu-heading pure-menu-link">Ted智能合约学习Demo</a>
+        </nav>
 
-          </Layout>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>
-          Payroll ©2018 xiong-wei@hotmail.com
-        </Footer>
-      </Layout>
+        <main className="container">
+          <div className="pure-g">
+            <div className="pure-u-1-3">
+                <Accounts accounts={accounts} onSelectAccount={this.onSelectAccount} />
+            </div>
+            <div className="pure-u-2-1">
+              {
+                selectedAccount === accounts[0]?
+                <Employer employer={selectedAccount} payroll={payroll} web3={web3} /> :
+                <Employee employee={selectedAccount} payroll={payroll} web3={web3} />
+              }
+              {
+                payroll && <Common account={selectedAccount} payroll={payroll} web3={web3} />
+              }
+            </div>
+          </div>
+        </main>
+      </div>
     );
   }
 }

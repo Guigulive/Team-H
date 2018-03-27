@@ -1,10 +1,7 @@
-/*作业请提交在这个目录下*/
-
-
 pragma solidity ^0.4.18;
 
-import "./SafeMath.sol";
-import "./Ownable.sol";
+import "zeppelin-solidity/contracts/math/SafeMath.sol";
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract Payroll is Ownable {
     
@@ -19,7 +16,7 @@ contract Payroll is Ownable {
     uint constant payDuration = 10 seconds;
     uint totalSalary;
     
-    mapping(address => Employee) employees;
+    mapping(address => Employee) public employees;
     
     modifier existsEmployee(address employeeId) {
         var employee = employees[employeeId];

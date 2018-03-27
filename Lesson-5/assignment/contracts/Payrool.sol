@@ -15,6 +15,8 @@ contract Payroll is Ownable{
 
     address self;
     uint totalSalary;
+    uint totalEmployee;
+
     mapping(address => Employee) public employees;
 
     function Payroll() public {
@@ -38,12 +40,14 @@ contract Payroll is Ownable{
         uint salaryWei = salary.mul(1 ether);
         totalSalary = totalSalary.add(salaryWei);
         employees[employeeId] = Employee(employeeId, salaryWei, now);
+        totalEmployee = totalEmployee.add(1);
     }
 
     function removeEmployee(address employeeId) onlyOwner employeeExit(employeeId) public {
         _partialPaid(employees[employeeId]);
         totalSalary = totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
+         totalEmployee = totalEmployee.sub(1);
     }
 
     function updateEmployee(address employeeId, uint salary) onlyOwner employeeExit(employeeId) public {
@@ -96,4 +100,9 @@ contract Payroll is Ownable{
         delete employees[employeeId];
     }
 
+    function getInfo() public view returns (uint balance, uint runway, uint employeeCount) {
+        balance = this.balance;
+        runway = calculateRunway();
+        employeeCount = totalEmployee;
+    }
 }

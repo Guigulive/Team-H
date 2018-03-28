@@ -20,7 +20,6 @@ const { Header, Content, Footer } = Layout;
 class App extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
       web3: null,
       mode: 'employer'
@@ -30,7 +29,6 @@ class App extends Component {
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
-
     getWeb3.then(results => {
       this.setState({
         web3: results.web3
@@ -45,21 +43,15 @@ class App extends Component {
   }
 
   instantiateContract() {
-
     const contract = require('truffle-contract')
     const payroll = contract(PayrollContract)
     payroll.setProvider(this.state.web3.currentProvider)
 
-    // Declaring this for later so we can chain functions on Payroll.
-    //var payrollInstance
-
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
-
       //console.log(accounts);
       this.setState({
-        accounts,
-        selectedAccount:accounts && accounts[0]
+        account:accounts && accounts[0]
       });
 
       payroll.deployed().then((instance) => {
@@ -71,13 +63,38 @@ class App extends Component {
     })
   }
 
-  onSelectAccount=(employee)=>{
+  // onSelectAccount=(employee)=>{
+  //
+  //   this.setState({
+  //     selectedAccount:employee.target.text
+  //   });
+  //
+  // }
 
+  onSelectTab = ({key}) => {
     this.setState({
-      selectedAccount:employee.target.text
+      mode: key
     });
+  }
 
-}
+  renderContent = () => {
+    const {account, payroll, web3, mode } = this.state;
+    if(!payroll) {
+      return <Spin tip="Loading..." />
+    }
+
+    switch (mode) {
+      case 'employee':
+        return <Employee employee={account} payroll={payroll} web3={web3} />
+      case 'employer':
+        return <Employer account={account} payroll={payroll} web3={web3} />
+      case 'about':
+          return <Alert message="欢迎使用Ted开发的以太坊薪酬管理系统" type="info"/>
+      default:
+        return <Alert message="请选择一个模式" type="info" showIcon />
+    }
+
+  }
 
   render() {
     //console.log('call render');
@@ -91,7 +108,7 @@ class App extends Component {
     return (
       <Layout>
         <Header className='header'>
-          <div className='logo'>Ted区块链开发作业-薪酬系统</div>
+          <div className='logo'>Ted区块链开发</div>
           <Menu
             theme="dark"
             mode="horizontal"
@@ -101,15 +118,16 @@ class App extends Component {
             >
             <Menu.Item key="employer">雇主</Menu.Item>
             <Menu.Item key="employee">雇员</Menu.Item>
+            <Menu.Item key="about">关于</Menu.Item>
           </Menu>
         </Header>
         <Content style={{padding:'0 50px'}}>
           <Layout style={{ padding:'24px 0', background:'#fff', minHeight: '600px'}}>
-
+            {this.renderContent()}
           </Layout>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
-          Payroll ©2018 xiong-wei@hotmail.com
+          Payroll ©2018 TedXiong xiong-wei@hotmail.com
         </Footer>
       </Layout>
     );

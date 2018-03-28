@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Card, Col, Row } from 'antd'
 
 class Common extends Component{
 
@@ -23,9 +24,17 @@ class Common extends Component{
         return (
             <div>
                 <h2>薪酬信息概览</h2>
-                <p>薪水余额:{balance} ETH</p>
-                <p>总员工数:{employeeCount}</p>
-                <p>可支付次数:{runway}</p>
+                <Row gutter={16}>
+                <Col span={8}>
+                  <Card title="薪水余额:">{balance} ETH</Card>
+                </Col>
+                <Col span={8}>
+                  <Card title="总员工数:">{employeeCount} 个</Card>
+                </Col>
+                <Col span={8}>
+                  <Card title="可支付次数:">{runway} ETH</Card>
+                </Col>
+                </Row>
             </div>
         );
     }

@@ -1,12 +1,75 @@
 import React, { Component } from 'react'
+import { Layout, Menu, Alert } from 'antd';
+
+
+import Fund from './Fund';
+import EmployeeList from './EmployeeList';
+
+const { Content, Sider } = Layout;
 
 class Employer extends Component{
 
     constructor(props){
         super(props);
-        this.state={};
+        this.state={mode: 'fund'};
     }
 
+    componentDidMount() {
+      const { account, payroll } = this.props;
+      payroll.owner.call({from: account})
+      .then((result) => {
+        this.setState({
+          owner: result
+        });
+      })
+    }
+
+    onSelectTab = ({key}) => {
+      this.setState({
+        mode: key
+      });
+    }
+
+    renderContent = () => {
+      const { account, payroll, web3 } = this.props;
+      const { mode, owner } = this.state;
+
+      if (owner !== account) {
+        return <Alert message="你没有权限" type="error" showIcon />;
+      }
+
+      switch(mode) {
+        case 'fund':
+          return <Fund account={account} payroll={payroll} web3={web3} />
+        case 'employees':
+          return <EmployeeList account={account} payroll={payroll} web3={web3} />
+          default:
+            return <Alert message="请选择一个模式" type="info" showIcon />
+      }
+
+    }
+
+    render(){
+        return (
+          <Layout style={{ padding: '24px 0', background: '#fff'}}>
+            <Sider width={200} style={{ background: '#fff' }}>
+              <Menu
+                mode="inline"
+                defaultSelectedKeys={['fund']}
+                style={{ height: '100%' }}
+                onSelect={this.onSelectTab}
+              >
+                <Menu.Item key="fund">合约信息</Menu.Item>
+                <Menu.Item key="employees">雇员信息</Menu.Item>
+              </Menu>
+            </Sider>
+            <Content style={{ padding: '0 24px', minHeight: 280 }}>
+              {this.renderContent()}
+            </Content>
+          </Layout>
+        );
+
+    }
 
     addFund=()=>{
         const {payroll, employer, web3}=this.props;
@@ -19,8 +82,6 @@ class Employer extends Component{
         console.log('addFund success!');
 
     }
-
-
     addEmployee=()=>{
 
         const {payroll, employer}=this.props;
@@ -45,7 +106,6 @@ class Employer extends Component{
 
     }
 
-
     removeEmployee=()=>{
 
         const {payroll, employer}=this.props;
@@ -57,51 +117,11 @@ class Employer extends Component{
         });
 
     }
-
-
-
-    render(){
-
-        return (
-            <div>
-                <h2>雇主</h2>
-                <form className="pure-form pure-form-stacked">
-                    <fieldset>
-                        <legend>注资</legend>
-                        <label>金额</label>
-                        <input
-                            type="text" placeholder="fund" ref={(input)=>{this.fundInput=input;}} />
-                        <button type="submit" className="pure-button" onClick={this.addFund}>添加资金</button>
-                    </fieldset>
-                </form>
-
-                <form className="pure-form pure-form-stacked">
-                    <fieldset>
-                        <legend>添加/更新 员工</legend>
-                        <label>员工Id</label>
-                        <input type="text" placeholder="employee" ref={(input)=>{this.employeeInput=input;}} />
-                        <label>salary</label>
-                        <input type="text" placeholder="salary" ref={(input)=>{this.salaryInput=input;}} />
-
-                        <button type="submit" className="pure-button" onClick={this.addEmployee}>添加</button>
-                        <button type="submit" className="pure-button" onClick={this.updateEmployee}>更新</button>
-
-                    </fieldset>
-                </form>
-
-                <form className="pure-form pure-form-stacked">
-                    <fieldset>
-                        <legend>移除员工</legend>
-                        <label>员工Id</label>
-                        <input
-                            type="text" placeholder="employee" ref={(input)=>{this.removeEmployeeInput=input;}} />
-                        <button type="submit" className="pure-button" onClick={this.removeEmployee}>移除</button>
-                    </fieldset>
-                </form>
-            </div>
-        );
-
-    }
 }
+
+
+
+
+
 
 export default Employer;

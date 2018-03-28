@@ -1,8 +1,8 @@
 Payroll.deployed().then(instance => payroll = instance)
-web3.fromWei(web3.eth.getBalance('0x214ba0c71398316a107a41ddcf9679c6c312fee6').toNumber(),'ether')
+web3.fromWei(web3.eth.getBalance('0x9fbda871d559710256a2502a2517b794b482db40').toNumber(),'ether')
 web3.fromWei(web3.eth.getBalance(web3.eth.accounts[0]).toNumber())
 payroll.addFund({from: web3.eth.accounts[0], value: 60000000000000000000})
-payroll.addEmployee(web3.eth.accounts[1], 2, {from: web3.eth.accounts[0]})
+payroll.addEmployee(web3.eth.accounts[2], 2, {from: web3.eth.accounts[0]})
 payroll.addEmployee(web3.eth.accounts[1], 2)
 payroll.checkEmployee(web3.eth.accounts[1])
 

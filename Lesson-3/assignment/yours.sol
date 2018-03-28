@@ -1,7 +1,9 @@
 pragma solidity ^0.4.14;
 
+import './SafeMath.sol';
 import './Ownable.sol';
 contract Payroll is Ownable{
+    using SafeMath for unit;	
 	struct Employee{
 		address id;
 		uint salary;
@@ -29,7 +31,8 @@ contract Payroll is Ownable{
     }
     
     function _partialPaid(Employee employee) private {
-        uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+	uint now_new=now.sub(employee.lastPayDay)
+        uint payment = employee.salary * (now_new) / payDuration;
         employee.id.transfer(payment);
     }
     
@@ -39,7 +42,7 @@ contract Payroll is Ownable{
         var employee=employees[employeeid];
         assert(employee.id==0x0);
         
-        totalSalary+=salary * 1 ether;
+        totalSalary=totalSalary.add(salary * 1 ether);
     	employees[employeeid]=Employee(employeeid,salary*1 ether,now);
     }
 
@@ -48,7 +51,7 @@ contract Payroll is Ownable{
         var employee=employees[employeeid];
         //assert(employee.id!=0x0);
         _partialPaid(employee);
-        totalSalary-=employees[employeeid].salary;
+        totalSalary=totalSalary.sub(employees[employeeid].salary);
         delete employees[employeeid];
     }
     
@@ -57,18 +60,18 @@ contract Payroll is Ownable{
         var employee=employees[employeeid];
         //assert(employee.id!=0x0);
         _partialPaid(employee);
-        totalSalary-=employees[employeeid].salary;
+        totalSalary=totalSalary.sub(employees[employeeid].salary);
         employees[employeeid].salary=salary * 1 ether;
         
         employees[employeeid].lastPayday=now;
-        totalSalary+=employees[employeeid].salary;
+        totalSalary=totalSalary.add(employees[employeeid].salary);
        
     }
     
     function changePaymentAddress(address employeeid, address new_id) onlyOwner employeeExist(employeeid){
         var employee=employees[employeeid];
-        _partialPaid(employee);
-        employee.id=new_id;
+        employees[new_id]=Employee(new_id,employee.salary,employee.lastPayday);
+        delete employees[employeeid];
     }
     
     function addFund() payable returns (uint) {

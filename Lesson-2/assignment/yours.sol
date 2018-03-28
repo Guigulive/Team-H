@@ -82,3 +82,4 @@ contract Payroll {
         employees[index].id.transfer(employee.salary);
     }
 }
+

@@ -1,3 +1,7 @@
 node_modules
 build
 *.log
+.idea
+*.DS_Store 
+../../../.DS_Store
+../../.DS_Store

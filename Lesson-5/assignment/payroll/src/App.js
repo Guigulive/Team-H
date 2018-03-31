@@ -59,7 +59,7 @@ class App extends Component {
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
       this.setState({
-        account: accounts[0],
+        account: accounts[2]
       });
       Payroll.deployed().then((instance) => {
         PayrollInstance = instance
@@ -79,9 +79,9 @@ class App extends Component {
   renderContent = () => {
     const { account, payroll, web3, mode } = this.state;
 
-    if (!payroll) {
-      return <Spin tip="Loading..." />;
-    }
+    // if (!payroll) {
+    //   return <Spin tip="Loading..." />;
+    // }
 
     switch(mode) {
       case 'employer':

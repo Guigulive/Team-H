@@ -23,7 +23,7 @@ contract Payroll is Ownable, PullPayment {
         uint lastPaymentSettlementDate; // the last payment settlement date
     }
     address[] employeeList;
-    uint totalEmployee;
+    uint TotalEmployee;
     mapping(address => Employee) public employees;
     uint private _totalSalary;
 
@@ -61,9 +61,22 @@ contract Payroll is Ownable, PullPayment {
         }
     }
 
-    function checkEmployee(uint index) public returns (address employeeId, uint salary, uint lastPayday) {
+    /**
+     * @dev Allows caller to check the info of an employee.
+     * @param index The index of the employee in employeeList.
+     */
+    function checkEmployee(uint index)
+        public
+        view 
+        returns 
+        (
+            address employeeId, 
+            uint salary, 
+            uint lastPayday
+        ) 
+    {
         employeeId = employeeList[index];
-        var employee = employees[employeeId];
+        Employee storage employee = employees[employeeId];
         salary = employee.salary;
         lastPayday = employee.lastPaymentSettlementDate;
     }
@@ -81,7 +94,7 @@ contract Payroll is Ownable, PullPayment {
         employees[employeeId] = Employee(employeeId, salary.mul(1 ether), now);
         _totalSalary = _totalSalary.add(employees[employeeId].salary);
         employeeList.push(employeeId);
-        totalEmployee = totalEmployee.add(1);
+        TotalEmployee = TotalEmployee.add(1);
     }
 
     /**
@@ -96,7 +109,7 @@ contract Payroll is Ownable, PullPayment {
         _settlePayment(employeeId);
         _totalSalary = _totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
-        totalEmployee = totalEmployee.sub(1);
+        TotalEmployee = TotalEmployee.sub(1);
     }
 
     /**
@@ -123,13 +136,13 @@ contract Payroll is Ownable, PullPayment {
         public
         employee_exist(msg.sender)
     {
-      require(msg.sender != newEmployeeId);
-      employees[msg.sender].id = newEmployeeId;
-      employees[newEmployeeId] = employees[msg.sender];
-      delete employees[msg.sender];
-      uint payment = payments[msg.sender];
-      delete payments[msg.sender];
-      asyncSend(newEmployeeId, payment);
+        require(msg.sender != newEmployeeId);
+        employees[msg.sender].id = newEmployeeId;
+        employees[newEmployeeId] = employees[msg.sender];
+        delete employees[msg.sender];
+        uint payment = payments[msg.sender];
+        delete payments[msg.sender];
+        asyncSend(newEmployeeId, payment);
     }
 
     /**

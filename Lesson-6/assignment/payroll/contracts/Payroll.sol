@@ -27,6 +27,26 @@ contract Payroll is Ownable, PullPayment {
     mapping(address => Employee) public employees;
     uint private _totalSalary;
 
+    event NewEmployee(
+        address employee
+    );
+
+    event UpdateEmployee(
+        address employee
+    );
+
+    event RemoveEmployee(
+        address employee
+    );
+
+    event NewFund(
+        uint balance
+    );
+
+    event GetPaid(
+        address employee
+    );
+
     /**
      * @dev Throws if an employee doesn't exist.
      * @param employeeId The employee id to be checked.
@@ -95,6 +115,7 @@ contract Payroll is Ownable, PullPayment {
         _totalSalary = _totalSalary.add(employees[employeeId].salary);
         employeeList.push(employeeId);
         TotalEmployee = TotalEmployee.add(1);
+        NewEmployee(employeeId);
     }
 
     /**
@@ -110,6 +131,7 @@ contract Payroll is Ownable, PullPayment {
         _totalSalary = _totalSalary.sub(employees[employeeId].salary);
         delete employees[employeeId];
         TotalEmployee = TotalEmployee.sub(1);
+        RemoveEmployee(employeeId);
     }
 
     /**
@@ -126,6 +148,7 @@ contract Payroll is Ownable, PullPayment {
         _settlePayment(employeeId); // Settle old-rate salary payment
         _totalSalary = _totalSalary.add(newSalary).sub(employees[employeeId].salary);
         employees[employeeId].salary = newSalary;
+        UpdateEmployee(employeeId);
     }
 
     /**
@@ -149,6 +172,7 @@ contract Payroll is Ownable, PullPayment {
      * @dev Allows adding funds/balance to the contract.
      */
     function addFund() public payable returns (uint) {
+        NewFund(this.balance);
         return address(this).balance;
     }
 
@@ -172,6 +196,7 @@ contract Payroll is Ownable, PullPayment {
     function getPaid() public employee_exist(msg.sender) {
         _settlePayment(msg.sender);
         withdrawPayments();
+        GetPaid(msg.sender);
     }
 
     /**
@@ -183,5 +208,16 @@ contract Payroll is Ownable, PullPayment {
     {
         require(payments[msg.sender] > 0);
         withdrawPayments();
+    }
+
+    /**
+     * @dev Allows checking the contract information
+     */
+    function checkInfo() public view returns (uint balance, uint runway, uint employeeCount) {
+        balance = this.balance;
+        employeeCount = TotalEmployee;
+        if (_totalSalary > 0) {
+            runway = calculateRunway();
+        }
     }
 }
